@@ -4,6 +4,8 @@
 ;;; Copyright (c) 2015 Matti Vesa
 ;;;
 
+$target-common
+
 *** program
 
     local tmp
@@ -27,9 +29,9 @@
 
     function checkStack()
         if sp > -1 then
-            print("ERROR : Stack not empty at end of block! Contenst:" )
+            print("ERROR : Stack not empty at end of block! Contents:" )
             for k,v in pairs(ds) do
-                print(k, v)
+                print("* " .. k, v)
             end
         end
         sp = -1
@@ -145,7 +147,6 @@ int main(int argc, const char* argv[]) {
     psp = 0;
     hp = 0;
     rssp = 0;
-    sgsp = 0;
     heap = malloc(HEAP_SIZE * sizeof(int));
     if(SDL_Init(SDL_INIT_VIDEO)==-1) {
         printf("Could not initialize SDL!\n");
@@ -161,11 +162,12 @@ int main(int argc, const char* argv[]) {
      virt = (int*)malloc(BLOCK_SIZE * sizeof(int));
 ]])
 ;;; Function definition func <name> -> <body> ;
-*** :
+*** fun
 print("void 
-*** ->
+*** fun->
 () {")
-*** ;
+
+*** fun-fend
 print("}")
 
 checkStack()
@@ -178,7 +180,7 @@ print("
 
 ;;; Variable definition
 *** vars
-print("int A, B, C, D, E, F, G, H;")
+print("int A, B, C, D, E, F, G, H, I, J, K, L, M, N;")
 *** var
 print("int
 *** |
@@ -269,31 +271,6 @@ push("
     tmp = ds[sp]
     ds[sp] = ds[sp-1]
     ds[sp-1] = tmp
-;;; Parameter passing
---- vars1
-    [A] >t
---- vars2
-    [A] >t [B] >t
---- vars3
-    [A] >t [B] >t [C] >t
---- vars4
-    [A] >t [B] >t [C] >t [D] >t
---- vars5
-    [A] >t [B] >t [C] >t [D] >t [E] >t
---- vars6
-    [A] >t [B] >t [C] >t [D] >t [E] >t [F] >t
---- return1
-    t> {A}
---- return2
-    t> {B} t> {A}
---- return3
-    t> {C} t> {B} t> {A}
---- return4
-    t> {D} t> {C} t> {B} t> {A}
---- return5
-    t> {E} t> {D} t> {C} t> {B} t> {A}
---- return6
-    t> {F} t> {E} t> {D} t> {C} t> {B} t> {A}
 
 ;;; Trigonometric functions
 *** sin
@@ -325,6 +302,8 @@ push("
 ;;; Conditionals
 *** if
     print("if (" .. pop() .. " != 0) {")
+*** else
+    print("} else {")
 *** endif
     print("}")
 ;;; Looping constructs
@@ -340,6 +319,8 @@ push("
     push("rs[rssp]")
 *** j
     push("rs[rssp - 2]")
+*** k
+    push("rs[rssp - 4]")
 *** repeat
     print("do {")
 *** until
@@ -399,3 +380,4 @@ ds[sp]="
     print("palette[" .. ds[sp] .. " ] = " .. ds[sp - 1] .. " * 65536 + " .. ds[sp - 2] .. " * 256 + " .. ds[sp - 3] ..";")
     sp = sp - 4
 
+===

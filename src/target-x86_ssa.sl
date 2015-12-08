@@ -34,6 +34,8 @@ $target-common
            F dw 0
            G dw 0
            H dw 0
+           I dw 0
+           J dw 0
            stack1 dw 0
            stack2 dw 0
            stack3 dw 0
@@ -137,6 +139,12 @@ print("
     sp = sp + 1
     print("mov bx, sp")
     print("mov ax, [ss:bx + 2]")
+    print("mov " .. regs[sp] .. ", ax")
+
+*** k
+    sp = sp + 1
+    print("mov bx, sp")
+    print("mov ax, [ss:bx + 4]")
     print("mov " .. regs[sp] .. ", ax")
 
 *** repeat
