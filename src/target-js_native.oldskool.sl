@@ -28,7 +28,7 @@ var flip = function() {
         }
     }
 
-    ctx.drawImageData(0,0,pixels);
+    ctx.putImageData(pixels,0,0);
 }
 ]])
 ===

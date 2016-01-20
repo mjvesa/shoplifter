@@ -48,30 +48,30 @@ print([[
 <html>
     <head><title>Shoplifter program</title></head>
     <body>
-        <canvas id="canvas"></canvas>
+        <canvas id="canvas" width="160" height="100" style="width:100%; height:100%;"></canvas>
         <script>
 
     var BLOCK_SIZE =  256 * 256;
     var BMOD = BLOCK_SIZE - 1;
     var HEAP_SIZE = 1024 * 1024;
-    var ds = []; // data stack
-    var ps = []; // param stack
-    var rs = []; // return stack
-    var ts=  []; // temp stack
-    var sp;      // data stack pointer
-    var psp;     // paramter stack pointer
-    var rssp;    // return stack pointer
-    var tsp;     // temporary stack pointer
+    var ds = [];  // data stack
+    var ps = [];  // param stack
+    var rs = [];  // return stack
+    var ts=  [];  // temp stack
+    var sp = 0;   // data stack pointer
+    var psp = 0;  // paramter stack pointer
+    var rssp = 0; // return stack pointer
+    var tsp = 0;  // temporary stack pointer
     var tmp;
     var palette = [];
     var virt = [];
-    var  heap = [];
-    var hp;
+    var  heap = new Int16Array(65536 * 16);
+    var hp = 0;
 
 var Main_Loop = function()  {
      Render_Frame();
      console.log("Another frame");
-     window.RequestAnimationFrame(Main_Loop);
+     window.requestAnimationFrame(Main_Loop);
 }
 
 var allocMem = function(amount) {
@@ -225,9 +225,9 @@ push("
 
 ;;; Trigonometric functions
 *** sin
-    ds[sp] = "(Math.sin(" .. ds[sp] .. " * M_PI / 512.0) * 256)|0"
+    ds[sp] = "(Math.sin(" .. ds[sp] .. " * Math.PI / 512.0) * 256)|0"
 *** cos
-    ds[sp] = "(Math.cos(" .. ds[sp] .. " * M_PI / 512.0) * 256)|0"
+    ds[sp] = "(Math.cos(" .. ds[sp] .. " * Math.PI / 512.0) * 256)|0"
 *** atan
     ds[sp] = "(Math.atan(" .. ds[sp] .. " / 256.0) * 256)|0"
 
