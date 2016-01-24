@@ -7,19 +7,33 @@ fun Make_Plasma_Table ->
         [value] 0 < if
             0 {value}
         endif
+    : calc-index
+      i [rx] + j [ry] + [BUFFER_EDGE] * +
+      [BM] and {index}
+    : get-previous-value
+      [index] [plasma] @
+    : calc-pixel-value
+      i sqr j sqr + [BUFFER_EDGE] 4 / /
+      15 swap - {value}
+      saturate
+    : add-value
+      get-previous-value [value] +
+    : store-value
+      [index] [plasma] !
+    : for-each-line
+      [BUFFER_EDGE] 4 /
+      0 [BUFFER_EDGE] - 4 / do
+    : for-each-pixel
+      for-each-line
     : draw-bob
-        15 -16 do
-            15 -16 do
-                i [rx] + j [ry] + [BUFFER_EDGE] * + ;;; Where to store
-                [BM] and {index}                    ;;; Wrap it to buffer
-                [index] [plasma] @                  ;;; Previous value
-                i sqr j sqr + 16 /
-                15 swap - {value}                   ;;; Calc pixel value
-                saturate
-                [value] + [index] [plasma] !        ;;; Store value
-            loop
+      for-each-line
+        for-each-pixel
+          calc-index
+          calc-pixel-value
+          add-value
+          store-value
         loop
-
+      loop
     ;;; Allocate and clear plasma table
     : allocate-plasma-table
         [BUFFER_SIZE] allot {plasma}
