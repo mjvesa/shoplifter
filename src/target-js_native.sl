@@ -40,7 +40,7 @@ $target-common
     function binop(op)
         local right = pop()
         local left = pop()
-        push("((" .. left .. "|0)" .. op .. "(".. right .. "|0)" .. ")")
+        push("((" .. left .. "|0)" .. op .. "(".. right .. "|0))")
     end
 
 print([[
@@ -48,29 +48,24 @@ print([[
 <html>
     <head><title>Shoplifter program</title></head>
     <body>
-        <canvas id="canvas" width="160" height="100" style="width:100%; height:100%;"></canvas>
+        <canvas id="canvas" width="320" height="200" style="width:100%; height:100%;"></canvas>
         <script>
-
-    var BLOCK_SIZE =  256 * 256;
-    var BMOD = BLOCK_SIZE - 1;
-    var HEAP_SIZE = 1024 * 1024;
-    var ds = [];  // data stack
+    var ds = [];
     var ps = [];  // param stack
     var rs = [];  // return stack
-    var ts=  [];  // temp stack
-    var sp = 0;   // data stack pointer
+    var ts =  [];  // temp stack
     var psp = 0;  // paramter stack pointer
     var rssp = 0; // return stack pointer
     var tsp = 0;  // temporary stack pointer
+    var sp = 0;
     var tmp;
     var palette = [];
     var virt = [];
-    var  heap = new Int16Array(65536 * 16);
+    var heap = new Int16Array(65536 * 16);
     var hp = 0;
 
 var Main_Loop = function()  {
      Render_Frame();
-     console.log("Another frame");
      window.requestAnimationFrame(Main_Loop);
 }
 
@@ -78,7 +73,6 @@ var allocMem = function(amount) {
     hp = hp + amount;
     return hp;
 }
-
 
 var paramPop = function() {
     psp--;
@@ -275,7 +269,7 @@ push("
 *** until
     print("} while (" .. pop() .. " === 0);")
 *** enter-rendering-loop
-    print("window.requestAnimationFrame(Main_Loop());")
+    print("window.requestAnimationFrame(Main_Loop);")
 
 ;;; I/O
 *** check-esc
