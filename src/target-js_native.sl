@@ -6,7 +6,7 @@
 
 $target-common
 
-*** program
+*** program-header-init
 
     local tmp
     local ds = {}
@@ -43,13 +43,9 @@ $target-common
         push("((" .. left .. "|0)" .. op .. "(".. right .. "|0))")
     end
 
-print([[
 
-<html>
-    <head><title>Shoplifter program</title></head>
-    <body>
-        <canvas id="canvas" width="320" height="200" style="width:100%; height:100%;"></canvas>
-        <script>
+*** program-header-js
+print([[
     var ds = [];
     var ps = [];  // param stack
     var rs = [];  // return stack
@@ -61,7 +57,7 @@ print([[
     var tmp;
     var palette = [];
     var virt = [];
-    var heap = new Int16Array(65536 * 16);
+    var heap = []; // new Int16Array(65536 * 16);
     var hp = 0;
 
 var Main_Loop = function()  {
@@ -95,6 +91,19 @@ var tempPush = function(value) {
 }
 ]])
 
+*** program-header-html
+print([[
+<html>
+    <head><title>Shoplifter program</title></head>
+    <body>
+        <canvas id="canvas" width="320" height="200" style="width:100%; height:100%;"></canvas>
+        <script>
+]])
+
+: program
+  program-header-init
+  program-header-html
+  program-header-js
 
 *** end-program
 checkStack()
@@ -134,9 +143,9 @@ print("var
 
 ;;; Variable read
 *** [
-push("(
+push("
 *** ]
-|0)")
+")
 ;;; Variable write
 *** {
 print("
@@ -184,6 +193,12 @@ push("
 
 *** mod
     binop("%")
+
+*** >>
+    binop(">>")
+
+*** <<
+    binop("<<")
 ;;; *** /mod
 ;;; tmp = ds[sp]; ds[sp] = ds[sp - 1] / tmp; ds[sp - 1] = ds[sp - 1] % tmp;
 
@@ -282,9 +297,10 @@ push("
 ;;; Strings
 *** str-pre
 sp = sp + 1
-ds[sp]="
+ds[sp]="'
 *** str-post
-";
+'";
+
 *** str-cat
     sp--; ds[sp] = ds[sp] + ds[sp + 1];
 *** str-free
