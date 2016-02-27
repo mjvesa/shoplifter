@@ -325,9 +325,18 @@ ds[sp]="'
 *** flip
     print("flip();")
 *** cls
-    TODO cls
+    print("virt.fill(0)");
 *** setpal
     print("palette[" .. ds[sp] .. " ] = " .. ds[sp - 1] .. " * 65536 + " .. ds[sp - 2] .. " * 256 + " .. ds[sp - 3] ..";")
     sp = sp - 4
+
+;;; JavaScript sepecific things
+*** JS/set-attribute
+    print(ds[sp - 2] .. "." .. ds[sp - 1] .. " = " .. ds[sp] .. ";")
+    sp = sp - 3
+
+*** JS/get-attribute
+    print(ds[sp - 1] .. "." .. ds[sp] .. ";")
+    sp = sp - 2
 
 ===

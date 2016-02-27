@@ -55,9 +55,9 @@ print([[
 
 #define MAX_STACK 100
 
-#define BLOCK_SIZE 256 * 256
+#define BLOCK_SIZE 512 * 512
 #define BMOD BLOCK_SIZE - 1
-#define HEAP_SIZE 1024 * 1024
+#define HEAP_SIZE 1024 * 1024 * 16
 
 int ds[MAX_STACK]; // data stack
 int ps[MAX_STACK]; // param stack
@@ -99,8 +99,9 @@ void Main_Loop() {
 
 
 int allocMem(int amount) {
+    int oldhp = hp;
     hp = hp + amount;
-    return hp;
+    return oldhp;
 }
 
 
@@ -147,7 +148,7 @@ int main(int argc, const char* argv[]) {
     psp = 0;
     hp = 0;
     rssp = 0;
-    heap = malloc(HEAP_SIZE * sizeof(int));
+    heap = calloc(HEAP_SIZE, sizeof(int));
     if(SDL_Init(SDL_INIT_VIDEO)==-1) {
         printf("Could not initialize SDL!\n");
         exit(-1);
@@ -237,10 +238,15 @@ push("
 *** /
     binop("/")
 
+*** >>
+    binop(">>")
+*** <<
+    binop("<<")
 *** mod
     binop("%")
 ;;; *** /mod
 ;;; tmp = ds[sp]; ds[sp] = ds[sp - 1] / tmp; ds[sp - 1] = ds[sp - 1] % tmp;
+
 
 *** and
     binop("&")
@@ -274,11 +280,11 @@ push("
 
 ;;; Trigonometric functions
 *** sin
-    ds[sp] = "(int)(sin(" .. ds[sp] .. " * M_PI / 512.0) * 256)"
+    ds[sp] = "((int)(sin(" .. ds[sp] .. " * M_PI / 512.0) * 256))"
 *** cos
-    ds[sp] = "(int)(cos(" .. ds[sp] .. " * M_PI / 512.0) * 256)"
+    ds[sp] = "((int)(cos(" .. ds[sp] .. " * M_PI / 512.0) * 256))"
 *** atan
-    ds[sp] = "(int)(atan(" .. ds[sp] .. " / 256.0) * 256)"
+    ds[sp] = "((int)(atan(" .. ds[sp] .. " / 256.0) * 256))"
 
 ;;; Comparisons
 *** <
@@ -374,8 +380,10 @@ ds[sp]="
     sp = sp - 2
 *** flip
     print("flip();")
+
 *** cls
-    TODO cls
+    print("cls();")
+
 *** setpal
     print("palette[" .. ds[sp] .. " ] = " .. ds[sp - 1] .. " * 65536 + " .. ds[sp - 2] .. " * 256 + " .. ds[sp - 3] ..";")
     sp = sp - 4

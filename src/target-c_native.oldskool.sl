@@ -3,7 +3,7 @@
 
 print([[
 void putpixel(int x, int y, unsigned char color) {
-    virt[(x + y * 320) & BMOD] = palette[color];
+    virt[(x + y * 640) & BMOD] = palette[color];
 }
 
 void putpixel2(int i, unsigned char color) {
@@ -11,29 +11,27 @@ void putpixel2(int i, unsigned char color) {
 }
 
 void flip () {
-    int y, x, c, lw, lw2, lw3;
+    int y, x, c;
     int *from, *to;
 
     SDL_LockSurface(screen);
-
-    lw = screen->pitch / 4;
     to = (int*)screen->pixels;
     from = (int*)virt;
-    for(y = 0 ; y < 200 ; y++) {
-        for (x = 0 ; x < 320 ; x++) {
+    for(y = 0 ; y < 400 ; y++) {
+        for (x = 0 ; x < 640 ; x++) {
             c = from[x];
-            to[x * 2] = c;
-            to[x * 2 + 1] = c;
-
-            to[x * 2     + lw] = c;
-            to[x * 2 + 1 + lw] = c;
+            to[x] = palette[c & 255];
       }
-        from += 320;
-        to += screen->pitch / 2;
+        from += 640;
+        to += screen->pitch / 4;
     }
 
     SDL_UnlockSurface(screen);
     SDL_Flip(screen);
+}
+
+void cls() {
+    memset(virt, 0, sizeof(int) * BUFFER_SIZE);
 }
 ]])
 ===

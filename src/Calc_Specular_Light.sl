@@ -1,17 +1,17 @@
-fun Calc_Light ->
+fun Calc_Specular_Light ->
   vars2 'value A 'light B
   : sqr [HBE] - dup *
   : clip
-    [value] 0 < if
-      0 {value}
+    [value] 255 > if
+      255 {value}
     endif
 ;;;        $Saturate
   ===
   p> {light}
   [BEM] 0 do
     [BEM] 0 do
-      i sqr j sqr + [BUFFER_EDGE] 3 / /
-      255  swap - {value} clip
+      i sqr j sqr + [BUFFER_EDGE] 3 / / 1 +
+      10000  swap / {value} clip
       [value] j [BUFFER_EDGE] * i + [light] !
     loop
   loop
