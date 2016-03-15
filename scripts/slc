@@ -1,0 +1,20 @@
+#!/bin/sh
+#TODO make sure that the parameter does not contain .sl postfix
+#if 
+
+#JavaScript native
+echo "js native"
+sl $1.sl $1.lua js_native
+lua $1.lua > $1.html
+
+#x86 real mode SSA
+echo "x86 real mode SSA"
+sl $1.sl $1.lua x86_ssa
+lua $1.lua > $1.asm
+nasm $1.asm -o $1.com
+
+#C native
+echo "c native"
+sl $1.sl $1.lua c_native
+lua $1.lua > $1.c
+gcc $1.c -lm -lSDL -O2 -o $1
