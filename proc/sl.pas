@@ -3,14 +3,18 @@
  *
  *  An esoteric concatentive programming language
  *
- *  Copyright (c) 2015 Matti Vesa
+ *  Modified: 2015-8-12
  *)
 program shoplifter;
+
+uses SysUtils;
+
 {$H+}
 const
+    LOGGING = false;
     MAX_WORD_COUNT = 1000;
     MAX_NESTING_LEVEL = 100;
-    MAX_SOURCE_LENGTH = 10000;
+    MAX_SOURCE_LENGTH = 100000;
     SINGLE_CHARS   = ['(', ')', '[', ']', '{', '}','''', '$', '#', '"'];
 
 const
@@ -36,6 +40,12 @@ var
     wordCount       : integer;
     current         : string;
     whitespace      : string;
+
+procedure log(msg:string);
+begin
+    if LOGGING then writeln(msg);
+end;
+
 
 function hasNextWord:boolean;
 begin
@@ -114,7 +124,7 @@ begin
     while not eof(include) do begin
         inc(includeLength);
         oldLines[includeLength - 1] := source[line + includeLength - 1];
-        writeln('Replacing: ', source[line + includeLength - 1]);
+        log('Replacing: ' + source[line + includeLength - 1]);
         readln(include, s);
         source[line + includeLength - 1] := s;
     end;
@@ -126,13 +136,13 @@ begin
 
     {insert old source below the included stuff}
     for i := 0 to includeLength - 1 do begin
-        writeln('Putting back: ', oldLines[i]);
+        log('Putting back: ' + oldLines[i]);
         source[line  + includeLength + i] := oldLines[i];
     end;
     inc(sourceLength, includeLength);
 
     for i := 0 to sourceLength - 1 do begin
-        writeln('Source: ', source[i]);
+        log('Source: ' + source[i]);
     end;
 end;
 
@@ -155,11 +165,11 @@ begin
     nextLine;
     running := true;
     firstLine := true;
-    writeln('Got macro ', words[wordCount].name, ' of type ', target);
+    log('Got macro ' + words[wordCount].name + ' of type ' + IntToStr(target));
     while running do begin
         s := getNextWord;
-        if (s = '---') or (s = '===') or (s = '***') then begin
-            writeln('Ending macro with ', s);
+        if (s = ':') or (s = '===') or (s = '***') then begin
+            log('Ending macro with ' + s);
             if (s = '===') then begin
                 nextLine;
             end else begin
@@ -169,7 +179,7 @@ begin
         end else if s = ';;;' then begin
             nextLine;
         end else begin
-            writeln('Macro line: ', input);
+            log('Macro line: ' + input);
             if firstLine then begin
                 current := current + input;
                 firstLine := false;
@@ -205,7 +215,7 @@ var
     begin
         i := tokenize(word);
         if i < 0 then begin
-            writeln('Unable to find ', word,' in set of tokens');
+            log('Unable to find ' +  word + ' in set of tokens');
             halt;
         end else begin
             write(target, contents[tokenize(word)]);
@@ -222,10 +232,8 @@ var
         inc(inputIndex);
     end;
 
-
-    
 begin
-    writeln('Expanding ', fileName, ' to ', targetFileName);
+    log('Expanding ' + fileName + ' to ' + targetFileName);
     loadSource(fileName);
     assign(target, targetFileName);
     rewrite(target);
@@ -244,13 +252,13 @@ begin
                 {TODO string management stuff here}
                 end else if (S = '"') then begin
                     HandleString;
-                end else if (s = 'begin') then begin
+                end else if (s = 'begin-block') then begin
                     scopes[scopeIndex] := wordCount;
                     inc(scopeIndex);
-                end else if (s = 'end') then begin
+                end else if (s = 'end-block') then begin
                     dec(scopeIndex);
                     wordCount := scopes[scopeIndex];
-                end else if (s = '---') then begin
+                end else if (s = ':') then begin
                     loadMacro(SL_TO_SL_WORD);
                 end else if (s = '***') then begin
                     loadMacro(TARGET_WORD);
@@ -271,7 +279,7 @@ begin
                     end;
                 end else begin
                     i := tokenize(s);
-                    writeln('Expanding ', s);
+                    log('Expanding ' + s);
                     if (i < 0) then begin
                             write(target, ' ' + s + ' ');
                     end else begin
