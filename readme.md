@@ -1,3 +1,4 @@
+This is an ancient branch that uses Lua for the second compliation step. New version is to be standalone.
 Shoplifter
 ==========
 
