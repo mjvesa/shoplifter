@@ -9,9 +9,9 @@ The language is an AOT transpiler based on RPN syntax. It can be transpiled
 into a near idiomatic form of most procedural languages (including C like,
 Lisp like and SSA forms). Other features:
 
-    * Minimal transpiler (Pascal version around 300 lines)
-    * Uses macros, macro file can be changed to change the target
-    * Untyped, but rudimentary type checking is planned
+    * Minimal compiler (Pascal version around 300 lines)
+    * Meta language for writing targets, object language for programs
+    * Operationally typed, like Forth or BCPL
 
 Purpose and goals
 =================
