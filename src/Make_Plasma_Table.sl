@@ -17,7 +17,7 @@ fun Make_Plasma_Table ->
       15 swap - {value}
       saturate
     : add-value
-      get-previous-value [value] +
+      get-previous-value [value] + 255 and
     : store-value
       [index] [plasma] !
     : for-each-line

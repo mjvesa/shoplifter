@@ -1,25 +1,25 @@
 ;;; Parameter passing
---- vars1
+: vars1
     [A] >t
---- vars2
+: vars2
     [A] >t [B] >t
---- vars3
+: vars3
     [A] >t [B] >t [C] >t
---- vars4
+: vars4
     [A] >t [B] >t [C] >t [D] >t
---- vars5
+: vars5
     [A] >t [B] >t [C] >t [D] >t [E] >t
---- vars6
+: vars6
     [A] >t [B] >t [C] >t [D] >t [E] >t [F] >t
---- return1
+: return1
     t> {A}
---- return2
+: return2
     t> {B} t> {A}
---- return3
+: return3
     t> {C} t> {B} t> {A}
---- return4
+: return4
     t> {D} t> {C} t> {B} t> {A}
---- return5
+: return5
     t> {E} t> {D} t> {C} t> {B} t> {A}
---- return6
+: return6
     t> {F} t> {E} t> {D} t> {C} t> {B} t> {A}
